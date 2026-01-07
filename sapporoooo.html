@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026北海道行程v5.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0056b3; /* 冰藍色系 */
+            --secondary-color: #00897b; /* 官網按鈕色系 - 青綠色 */
+            --accent-color: #e3f2fd;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-color: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --card-border: #dfe1e5;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* --- Header --- */
+        header {
+            background-image: 
+                linear-gradient(rgba(0, 40, 80, 0.4), rgba(0, 40, 80, 0.2)), /* 半透明遮罩，增加文字對比度 */
+                url('https://www.snowtomamu.jp/common/wp-content/uploads/sites/9/2025/07/%E3%80%90%E3%83%88%E3%83%9E%E3%83%A0%E3%80%91CAT%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B7%E3%82%99-%E3%82%B9%E3%83%8E%E3%83%BC%E3%83%9B%E3%82%99%E3%83%BC%E3%83%88%E3%82%99%E5%85%A8%E6%99%AF%E3%83%A8%E3%82%B3-1.jpg');
+            background-size: cover;
+            background-position: 0% 60%;
+            color: var(--white);
+            padding: 5rem 1rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        h1 { margin: 0; font-size: 2.2rem; text-shadow: 0 2px 5px rgba(0,0,0,0.6); }
+        .subtitle { font-size: 1.1rem; margin-top: 10px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- Dashboard & Cards --- */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: -40px; /* Overlap header */
+        }
+        @media (min-width: 600px) { .dashboard { grid-template-columns: 1fr 1fr; } }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--primary-color);
+            height: fit-content;
+        }
+        .card h3 { margin-top: 0; color: var(--primary-color); border-bottom: 1px solid #eee; padding-bottom: 10px;}
+        
+        /* Google Flight Card Style */
+        .google-flight-card {
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 16px;
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(60,64,67,0.1);
+            margin-bottom: 10px;
+            font-family: Roboto, Arial, sans-serif;
+        }
+        .flight-header { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid #f1f3f4; padding-bottom: 8px; }
+        .flight-header .airline { font-weight: bold; display: flex; align-items: center; }
+        .route-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .airport { text-align: center; flex: 1; }
+        .airport .code { font-size: 24px; font-weight: 400; }
+        .airport .time { font-size: 20px; font-weight: bold; }
+        .flight-path { flex: 2; text-align: center; position: relative; padding: 0 10px; }
+        .flight-path .line { height: 2px; background-color: #dadce0; position: relative; margin: 10px 0; }
+        .flight-path .line i { position: absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(0deg); background: #fff; padding: 0 5px; color: #5f6368; }
+        .flight-footer { display: flex; justify-content: space-between; font-size: 12px; color: #5f6368; margin-top: 10px; }
+
+        /* Hotel Info Items */
+        .info-item { margin-bottom: 15px; font-size: 0.95rem; display: flex; }
+        .info-item i.icon-label { width: 25px; color: var(--primary-color); text-align: center; margin-top: 4px; }
+        .info-content { margin-left: 10px; flex: 1; }
+
+        /* Buttons */
+        .btn-group { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px; }
+        .btn { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; text-decoration: none; cursor: pointer; transition: 0.3s; border: none; }
+        .btn-map { background-color: #e8f5e9; color: #2e7d32; } .btn-map:hover { background-color: #c8e6c9; }
+        /* 航班搜尋按鈕 */
+        .btn-flight {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        .btn-flight:hover { background-color: #bbdefb; }
+
+        .btn-web { background-color: #e0f2f1; color: var(--secondary-color); } .btn-web:hover { background-color: #b2dfdb; }
+        .btn-weather { background-color: #fae58a; color: var(--secondary-color); } .btn-weather:hover { background-color: #ec9d34; }
+        /* --- Navigation Tabs --- */
+        .nav-scroller {
+            overflow-x: auto; white-space: nowrap; background: var(--white); padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; margin-top: 20px;
+        }
+        .nav-tabs { display: flex; padding: 0 20px; list-style: none; margin: 0; }
+        .nav-item { padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent; color: var(--text-light); font-weight: bold; transition: 0.3s; }
+        .nav-item.active { border-bottom-color: var(--primary-color); color: var(--primary-color); }
+
+        /* --- Timeline (圖文並茂版) --- */
+        .day-content { display: none; animation: fadeIn 0.5s; padding-top: 20px; }
+        .day-content.active { display: block; }
+        .timeline { position: relative; padding: 10px 0; }
+        
+        /* 新的時間軸項目樣式 - Flex 佈局 */
+        .timeline-item {
+            position: relative;
+            padding-left: 35px; /* 留給圓點和線條的空間 */
+            margin-bottom: 25px;
+            display: flex;      /* 啟用 Flexbox */
+            align-items: flex-start; /* 內容頂部對齊 */
+            gap: 15px;          /* 文字與圖片間距 */
+        }
+
+        /* 時間軸線條與圓點 */
+        .timeline-item::before {
+            content: ''; position: absolute; left: 6px; top: 6px; width: 12px; height: 12px;
+            border-radius: 50%; background: var(--primary-color); z-index: 2;
+        }
+        .timeline-item::after {
+            content: ''; position: absolute; left: 11px; top: 18px; bottom: -30px;
+            width: 2px; background: #e0e0e0; z-index: 1;
+        }
+        .timeline-item:last-child::after { display: none; }
+
+        /* 左側文字內容區 */
+        .timeline-content {
+            flex: 1; /* 佔據剩餘空間 */
+            min-width: 0; /* 防止文字溢出 */
+        }
+        .time { font-weight: bold; color: var(--primary-color); font-size: 0.9rem; display: block; margin-bottom: 2px; }
+        .activity-title { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; line-height: 1.3; }
+        .activity-desc { color: var(--text-light); font-size: 0.95rem; margin-bottom: 8px; }
+
+        /* 右側圖片區 */
+        .timeline-image {
+            flex-shrink: 0; /* 防止圖片被壓縮 */
+            width: 120px;   /* 固定寬度，可依需求調整 */
+            height: 80px;   /* 固定高度 */
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        .timeline-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 保持比例填滿 */
+        }
+
+        /* 手機版響應式調整 */
+        @media (max-width: 600px) {
+            .timeline-item {
+                flex-direction: column; /* 改為垂直排列 */
+            }
+            .timeline-image {
+                width: 100%; /* 圖片變為滿寬 */
+                height: 150px; /* 高度增加 */
+                margin-top: 10px;
+                order: 2; /* 讓圖片排在文字下方 (可選) */
+            }
+             .timeline-content {
+                order: 1;
+            }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        footer { text-align: center; padding: 20px; color: var(--text-light); font-size: 0.8rem; border-top: 1px solid #eee; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1><i class="fas fa-snowflake"></i> 北海道スキー旅行 </h1>
+    <div class="subtitle">2026年2月4日 - 2月11日 (8天7夜)</div>
+</header>
+
+<div class="container">
+    <div class="dashboard">
+        <div class="card" style="grid-column: span 2;">
+            <h3><i class="fas fa-plane"></i> 航班資訊 </h3>
+            <div class="google-flight-card">
+                <div class="flight-header">
+                    <span class="airline"><img src="https://www.evaair.com/favicon.ico" style="width:20px;margin-right:8px;">長榮航空 BR166
+                        </span>
+                    <span class="flight-date">2026年2月4日 (週三)</span>
+                </div>
+                <div class="flight-body" style="display:flex;">
+                    <div class="route-info" style="flex:1;">
+                        <div class="airport"><div class="code">TPE</div><div class="time">06:15</div></div>
+                        <div class="flight-path"><div class="duration">3h 45m</div><div class="line"><i class="fas fa-plane"></i></div><div class="status" style="color:#188038;font-size:12px;">準時</div></div>
+                        <div class="airport"><div class="code">CTS</div><div class="time">11:00</div></div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                        <button class="btn btn-flight" onclick="searchFlight('BR166')"><i class="fas fa-search"></i> 搜尋航班</button>
+                    </div>
+            </div>
+            <div class="google-flight-card">
+                <div class="flight-header">
+                    <span class="airline"><img src="https://www.evaair.com/favicon.ico" style="width:20px;margin-right:8px;">長榮航空 BR115
+                        </span>
+                    <span class="flight-date">2026年2月11日 (週三)</span>
+                </div>
+                 <div class="flight-body" style="display:flex;">
+                    <div class="route-info" style="flex:1;">
+                        <div class="airport"><div class="code">CTS</div><div class="time">15:20</div></div>
+                        <div class="flight-path"><div class="duration">4h 45m</div><div class="line"> <i class="fas fa-plane"></i></div><div class="status" style="color:#188038;font-size:12px;">準時</div></div>
+                        <div class="airport"><div class="code">TPE</div><div class="time">19:05</div></div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                        <button class="btn btn-flight" onclick="searchFlight('BR115')"><i class="fas fa-search"></i> 搜尋航班</button>
+                    </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-bed"></i> 住宿安排</h3>
+            <div class="info-item">
+                <i class="fas fa-hotel icon-label"></i> 
+                <div class="info-content">
+                    <strong>札幌 (2/4-2/5)</strong> JRタワーホテル日航札幌
+                    <img src="https://d3g2yh83to8qa2.cloudfront.net/wp-content/uploads/sites/57/2016/04/04064136/exterior_990x590.jpg" 
+                              alt="JR塔日航酒店外觀" 
+                              style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 6px; margin-top: 10px;">
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-map" onclick="openMap('JR Tower Hotel Nikko Sapporo')"><i class="fas fa-map-marker-alt"></i> 地圖</button>
+                        <a href="https://www.jrhotels.co.jp/tower/" target="_blank" class="btn btn-web"><i class="fas fa-globe"></i> 官網</a>
+                        <a href="https://www.google.com/search?q=%E6%9C%AD%E5%B9%8C%E5%A4%A9%E6%B0%A3&rlz=1C1JZAP_zh-TWTW745TW745&oq=%E6%9C%AD%E5%B9%8C%E5%A4%A9%E6%B0%A3&gs_lcrp=EgZjaHJvbWUqEwgAEEUYJxg7GEYYgAIYgAQYigUyEwgAEEUYJxg7GEYYgAIYgAQYigUyBwgBEAAYgAQyBwgCEAAYgAQyBwgDEAAYgAQyBwgEEAAYgAQyBwgFEAAYgAQyBwgGEAAYgAQyBwgHEAAYgAQyBwgIEAAYgAQyBwgJEAAYgATSAQgxNzk2ajBqNKgCALACAQ&sourceid=chrome&ie=UTF-8"
+                         target="_blank" class="btn btn-weather"><i class="fas fa-cloud-sun"></i> 天氣</a>
+                    </div>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-tree icon-label"></i> 
+                <div class="info-content">
+                    <strong>占冠村 (2/6-2/8)</strong> 星野リゾナーレトマム
+                    
+
+                   <img src="https://www.snowtomamu.jp/winter/topics/resonare-point/images/img01.jpg" 
+                              alt="星野リゾナーレトマム外觀" 
+                              style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 6px; margin-top: 10px;">
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-map" onclick="openMap('Hoshino Resorts Risonare Tomamu')"><i class="fas fa-map-marker-alt"></i> 地圖</button>
+                        <a href="https://www.snowtomamu.jp/winter/cn/" target="_blank" class="btn btn-web"><i class="fas fa-globe"></i> 官網</a>
+                        <a href="https://www.google.com/search?q=%E5%8D%A0%E5%86%A0%E6%9D%91%E5%A4%A9%E6%B0%A3&sca_esv=e0ee5455e7f1c925&rlz=1C1JZAP_zh-TWTW745TW745&sxsrf=AE3TifM2uFObjalgGqjrPv1JbqiJBG_wDw%3A1764836269564&ei=rUMxacScIuO1vr0P3b2poAE&ved=0ahUKEwiEp7y3v6ORAxXjmq8BHd1eChQQ4dUDCBE&uact=5&oq=%E5%8D%A0%E5%86%A0%E6%9D%91%E5%A4%A9%E6%B0%A3&gs_lp=Egxnd3Mtd2l6LXNlcnAiD-WNoOWGoOadkeWkqeawozIKECMYgAQYJxiKBTIFEAAY7wUyCBAAGIAEGKIEMggQABiABBiiBEiMJ1CUDlj3I3ABeAGQAQCYAU6gAdMBqgEBM7gBA8gBAPgBAvgBAZgCBKAC8wHCAgoQABiwAxjWBBhHwgIFECEYoAGYAwCIBgGQBgqSBwE0oAfsB7IHATO4B-ABwgcHMC4yLjEuMcgHGQ&sclient=gws-wiz-serp"
+                         target="_blank" class="btn btn-weather"><i class="fas fa-cloud-sun"></i> 天氣</a>
+                    </div>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-water icon-label"></i> 
+                <div class="info-content">
+                    <strong>支笏湖 (2/9-2/10) </strong>しこつ湖 鶴雅別荘 碧の座
+
+                 <img src="https://www.aonoza.com/lang_module/rooms/images/img-title.jpg" 
+                              alt="しこつ湖 鶴雅別荘 碧の座外觀" 
+                              style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 6px; margin-top: 10px;">
+                   
+                    <div class="btn-group">
+                        <button class="btn btn-map" onclick="openMap('Lake Shikotsu Tsuruga Besso Ao no Za')"><i class="fas fa-map-marker-alt"></i> 地圖</button>
+                        <a href="https://www.aonoza.com/" target="_blank" class="btn btn-web"><i class="fas fa-globe"></i> 官網</a>
+                        <a href="https://www.google.com/search?q=%E6%94%AF%E7%AC%8F%E6%B9%96%E5%A4%A9%E6%B0%A3&sca_esv=e0ee5455e7f1c925&rlz=1C1JZAP_zh-TWTW745TW745&sxsrf=AE3TifOqFYtWsS6ig53cl12XloIn3YvSgw%3A1764836372788&ei=FEQxadXiL4r91e8P4qq72A8&ved=0ahUKEwjVvNjov6ORAxWKfvUHHWLVDvsQ4dUDCBE&uact=5&oq=%E6%94%AF%E7%AC%8F%E6%B9%96%E5%A4%A9%E6%B0%A3&gs_lp=Egxnd3Mtd2l6LXNlcnAiD-aUr-esj-a5luWkqeawozIFEAAYgAQyCBAAGIAEGKIEMgUQABjvBTIIEAAYgAQYogRItzJQAFjzKnACeACQAQCYAT6gAewBqgEBNLgBA8gBAPgBAvgBAZgCBqACkALCAgYQABgHGB7CAggQABiiBBiJBcICChAjGIAEGCcYigXCAgsQABiABBixAxiDAZgDAJIHATagB8EIsgcBNLgHhQLCBwUwLjEuNcgHGw&sclient=gws-wiz-serp"
+                         target="_blank" class="btn btn-weather"><i class="fas fa-cloud-sun"></i> 天氣</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="nav-scroller">
+    <ul class="nav-tabs" id="dayTabs"></ul>
+</div>
+
+<div class="container" id="itineraryContent" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: var(--shadow);">
+    </div>
+
+<footer>
+    <p>副本放Github</p>
+</footer>
+
+<script>
+    // --- Data Model (新增 image 屬性) ---
+    const itineraryData = [
+        {
+            date: "2/4 (三)", title: "抵達札幌 & 雪祭",
+            events: [
+                { time: "11:00", title: "抵達新千歲機場", desc: "入境手續、領取行李，準備開始旅程！", location: "New Chitose Airport", image: "https://www.hokkaido-airports.com/ja/new-chitose/spend/event/assets/images/photocontest2025-result13.jpg" },
+                { time: "12:00", title: "搭乘 JR 前往札幌", desc: "抵達札幌先取JR票券、寄放行李,詳細路徑請參閱官網", location: "JR Sapporo Station" , url: "https://www.jrhotels.co.jp/tower/access/#access_jr", image:"https://t.pimg.jp/102/749/923/1/102749923.jpg"},
+                { time: "午餐", title: "みそラーメンのよし乃", desc: "傳說！北海道味噌拉麵，暖暖胃。", location: "Miso Ramen Yoshi-no Sapporo", url: "https://sites.google.com/tazawagroup.com/yoshino-apia/", image: "https://www.apiadome.com/share/img_uploads//pc/00001272_00003168_00000172.jpg" },
+                { time: "下午", title: "Stellar Place & 下午茶", desc: "グラッシェル吃冰，Stellar Place逛逛。", location: "GLACIEL Sapporo Stellar Place", url: "http://www.stellarplace.net/", image: "https://www.glaciel.jp/stella/images/menu/newarrival_69.jpg" },
+                { time: "15:00", title: "JR塔日航酒店 Check-in", desc: "入住後享用水療設施稍作休息,晚餐出門要穿北臉禦寒", location: "JR Tower Hotel Nikko Sapporo", url: "https://www.jrhotels.co.jp/tower/", image: "https://www.jrhotels.co.jp/tower/spa/img/slides/01.jpg" },
+                { time: "晚餐", title: "スープカレー しゃば蔵", desc: "經地下街往大通公園10出口,湯咖哩", location: "Soup curry syabazo", url: "https://syabazo.owst.jp/", image: "https://cdn.r-corona.jp/prd.rb.r-corona.jp/assets/site_files/fvvri2ug/24908341/5hqu_w500h500.jpg" },
+                { time: "夜間", title: "札幌雪祭 (大通會場)", desc: "晚餐後前往雪祭會場,走不完的可留明早", location: "Sapporo Odori Park", url: "https://www.snowfes.com/", image: "https://www.sapporo.travel/cms/wp-content/uploads/2025/07/2026%E3%81%95%E3%81%A3%E3%81%BD%E3%82%8D%E9%9B%AA%E3%81%BE%E3%81%A4%E3%82%8A%E3%83%9D%E3%82%B9%E3%82%BF%E3%83%BCjpg.jpg" }
+            ]
+        },
+        {
+            date: "2/5 (四)", title: "札幌市區巡禮",
+            events: [
+                { time: "6:30～10:00（最終入店9:30）", title: "レストラン&バー「SKY J」", desc: "飯店35樓自助餐,真的很猛明天可繼續吃。", location: "JR Tower Hotel Nikko Sapporo Sky J", url: "https://www.jrhotels.co.jp/tower/restaurant/skyj/breakfast.html", image: "https://www.jrhotels.co.jp/tower/restaurant/breakfast/img/ph_01.jpg?202411" },
+                { time: "早上", title: "北海道神宮", desc: "沿地下街至大通搭車前往円山公園,回程可北海道立近代美術館。", location: "北海道神宮", image: "https://d1grca2t3zpuug.cloudfront.net/2025/10/23294849_s-640x427-1759826706.webp" },
+                { time: "午餐", title: "狸小路", desc: "於商店街簡單吃(喜来登、山岡家、広島焼ひなちゃん)。", location: "狸小路商店街", image: "https://pbs.twimg.com/media/F8m6RDGa4AAHUfP.jpg" },
+                { time: "下午", title:  "市區觀光", desc: "以札幌站為起沿地下街前進,紅磚廳舍、狸小路、AOAO水族館、博野區。", location: "AOAO SAPPORO", image: "https://lifull-homes-press.s3.ap-northeast-1.amazonaws.com/uploads/press/2019/07/pixta_64754467_S.jpg" },
+                { time: "16:00", title: "札幌啤酒博物館", desc: "晚餐前抵達園區博物館導覽。", location: "Sapporo Beer Museum", url: "https://www.sapporobeer.jp/brewery/s_museum/", image: "https://www.sapporo.travel/cms/wp-content/uploads/2013/06/IMG_0134-1.jpg" },
+                { time: "18:00", title: "サッポロビール園 ガーデングリル", desc: "札幌啤酒花園餐廳、成吉思汗烤肉。", location: "Sapporo Garden Grill", url: "https://sapporobiergarten-gardengrill.com/", image: "https://sapporobiergarten-gardengrill.com/wp-content/uploads/rum_course.webp" }
+            ]
+        },
+        {
+            date: "2/6 (五)", title: "移至 星野リソートトマム",
+            events: [
+                { time: "7:00～10:00（最終入店 9:30）", title: "スカイレストラン「丹頂」", desc: "飯店35樓和定食套餐。", url: "https://www.jrhotels.co.jp/tower/restaurant/tancho/breakfast.html", location: "JR Tower Hotel Nikko Sapporo Sky J", image: "https://www.jrhotels.co.jp/tower/restaurant/breakfast/img/ph_02.jpg?20250530" },
+                { time: "11:46 發車", title: "札幌駅", desc: "11:00退房後買些零食準備搭車,也可買弁菜亭便當。", location: "Tomamu Station", image: "https://pathtothejourney.wordpress.com/wp-content/uploads/2016/03/dscn9044.jpg" },
+                { time: "13:21 到站", title: "トマム駅", desc: "辦理入住，預約回程接送、早餐等。", location: "Hoshino Resorts Risonare Tomamu", url: "https://www.snowtomamu.jp/winter/cn/", image: "https://www.snowtomamu.jp/winter/areamap/images/map2425.png" },
+                { time: "下午", title: "Mina-Mina Beach & 木林之湯", desc: "室內造浪泳池與露天風呂,整個下午在這混。", location: "Mina-Mina Beach", image: "https://www.snowtomamu.jp/assets/minamina/images/hero.jpg" },
+                { time: "17:00～20:30（料理提供20:00まで）", title: "晚餐 森林餐廳 ニニヌプリ", desc: "鄰近住宿的自助餐廳。", location: "Nininupuri Tomamu", url: "https://www.snowtomamu.jp/winter/restaurant/nininupuri.php", image: "https://www.snowtomamu.jp/assets/restaurant/images/nininupuri/gallery04.jpg" },
+                { time: "夜間", title: "Ice Village 冰村", desc: "要禦寒重裝備前來冰村,19:30有煙火、冰教堂 19:45-20:00", location: "Tomamu Ice Village", url: "https://www.snowtomamu.jp/winter/icevillage/", image: "https://www.snowtomamu.jp/sp/winter/wp-content/uploads/313d81b594d8670d4401d7cc1a16ac71.jpg" }
+            ]
+        },
+        // ... (為節省長度，後續日期資料結構相同，請自行依樣板補充圖片連結) ...
+         {
+            date: "2/7 (六)", title: "滑雪全日",
+            events: [
+                { time: "6:30～10:00", title: "早餐 森林餐廳 ニニヌプリ", desc: "鄰近住宿的自助餐廳。", location: "Nininupuri Tomamu", image: "https://www.snowtomamu.jp/assets/restaurant/images/nininupuri/hero.jpg" },
+                { time: "白天", title: "滑滑雪！", desc: "享受北海道著名粉雪。", location: "Tomamu Ski Resort", url: "https://www.snowtomamu.jp/winter/ski/", image: "https://www.snowtomamu.jp/assets/ski/images/home/topics04.jpg" },
+                { time: "午餐", title: "Hotalu street、Resort Center", desc: "螢火蟲餐廳區,麵屋 竹藏、GARAKU湯咖哩先考慮", location: "Hoshino Resort Tomamu Hotarusutorito", url : "https://www.snowtomamu.jp/winter/restaurant/", image: "https://www.snowtomamu.jp/assets/ski/images/ski-slope/family/item11.jpg" },
+                { time: "18:30", title: "晚餐 OTTO SETTE", desc: "義大利料理 (需著正裝)。", location: "OTTO SETTE TOMAMU", url: "https://www.snowtomamu.jp/winter/restaurant/ottosette.php", image: "https://www.snowtomamu.jp/assets/images/restaurant/ottosette/menu01-25g.jpg" }
+            ]
+        },
+        {
+            date: "2/8 (日)", title: "滑雪全日",
+            events: [
+                { time: "7:00～10:00(LO9:30)", title: "早餐 GRILLED・AGI", desc: "住宿32樓的餐廳,入住時先訂。", location: "GRILLED・AGI", image: "https://www.snowtomamu.jp/assets/restaurant/images/agi/point01-01.jpg" },
+                { time: "白天", title: "繼續滑滑雪！", desc: "有時間的話可去霧氷テラス。", location: "Tomamu Ski Resort", url: "https://www.snowtomamu.jp/winter/ski/", image: "https://www.snowtomamu.jp/sp/winter/wp-content/uploads/04f4bc66256808794261773c3d7eae6a-1.jpg" },
+                { time: "午餐", title: "Hotalu street、Resort Center", desc: "肚子餓就來兩區覓食", location: "Hoshino Resort Tomamu Hotarusutorito", url : "https://www.snowtomamu.jp/winter/restaurant/", image: "https://www.snowtomamu.jp/sp/winter/wp-content/uploads/32c60e19678c6ca793857297cafd9bc0.jpg" },
+                { time: "18:00", title: "晚餐 hal -ハル-", desc: "鄰近冰村的自助餐廳。", location: "ビュッフェダイニング hal", url: "https://www.snowtomamu.jp/winter/restaurant/haru.php", image: "https://www.snowtomamu.jp/assets/restaurant/images/hal/hero.jpg" }
+            ]
+        },
+        {
+            date: "2/9 (一)", title: "移至 支笏湖",
+             events: [
+                { time: "6:30〜7:30（7:15最終入場）", title: "水之教堂", desc: "安藤忠雄的經典建築。", location: "Chapel on the Water Tomamu", url: "https://tomamu-wedding.com/waterchapel/",image: "https://www.snowtomamu.jp/winter/cn/hotel/wedding/images/water_img.jpg" },
+                { time: "7:00～10:30（料理提供10:00まで）", title: "早餐 hal -ハル-", desc: "鄰近冰村的自助餐廳。", location: "ビュッフェダイニング hal", image: "https://www.snowtomamu.jp/assets/restaurant/images/hal/gallery01.jpg" },
+                { time: "白天", title: "霧氷テラス & 雪地活動", desc: "08:30 GAO Center 開放騎馬預約,早餐後可霧氷テラス走走(視天氣概況)。", location: "GAO Outdoor Centre", url: "https://www.snowtomamu.jp/winter/activity", image: "https://www.snowtomamu.jp/sp/winter/wp-content/uploads/0c1985217643ba4a9e4bf01b261d711e.jpg" },
+                { time: "12:15 發車", title: "トマム駅 ", desc: "11:00退房後前往搭車。", location: "Lake Shikotsu", image: "https://res.klook.com/image/upload/w_750,h_469,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/jlaqnje81ykmftf7qtgz.webp" },
+                { time: "13:38 到站", title: "南千歲駅", desc: "南千歲轉搭計程車前往支笏湖。", location: "Lake Shikotsu", image: "https://res.klook.com/image/upload/c_crop,h_1200,w_1920,x_0,y_40,z_0.1/w_1265,h_791,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/ubvhkrjtabbabruuqwrg.webp" },
+                { time: "14:00", title: "鶴雅別荘 碧の座 ", desc: "辦理入住,吃爆碧の座、爛醉之旅開始。", location: "しこつ湖 鶴雅別荘 碧の座", url: "https://www.aonoza.com/", image: "https://res.klook.com/image/upload/w_750,h_469,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/jlaqnje81ykmftf7qtgz.webp" },
+                { time: "晚餐", title: "飯店鐵板燒", desc: "第一晚先來鐵板料理。", location: "Lake Shikotsu Tsuruga Besso Ao no Za", image: "https://www.aonoza.com/cuisine/images/img_layout_6-pc.jpg" }
+            ]
+        },
+        {
+            date: "2/10 (二)", title: "支笏湖冰濤祭",
+             events: [
+                { time: "早餐", title: "飯店日式套餐", desc: "支笏湖很冷早餐要吃飽飽滴。", location: "Lake Shikotsu Tsuruga Besso Ao no Za", image: "https://www.aonoza.com/cuisine/images/img_layout_7.jpg" },
+                { time: "白天", title: "支笏湖冰濤祭", desc: "活動會場營業時間10:00~20:00,點燈16:30", location: "Lake Shikotsu Ice Festival", url: "https://hyoutou-special.asia/", image: "https://hyoutou-special.asia/wp-content/themes/soraha/img/img_11.jpg" },
+                { time: "下午", title: "糜爛支笏湖", desc: "湖岸閒晃,餓了就回飯店吃吃,也可以去水の謌泡大眾池。", location: "Lake Shikotsu Ice Festival", image: "https://www.mizunouta.com/hotspring/images/winter/img_hot1.jpg" },
+                { time: "晚餐", title: "飯店懷石料理", desc: "第二晚再來日式懷石料理。", location: "Lake Shikotsu Tsuruga Besso Ao no Za", image: "https://www.aonoza.com/cuisine/images/img_intro_3.jpg" }
+            ]
+        },
+         {
+            date: "2/11 (三)", title: "旅程結束",
+             events: [
+                { time: "早餐", title: "飯店日式套餐", desc: "吃飽飽今天要跟雪國說掰掰。", location: "Lake Shikotsu Tsuruga Besso Ao no Za", image: "https://www.mizunouta.com/cuisine/breakfast/images/img_new1_2.jpg" },
+                { time: "11:00", title: "前往機場", desc: "11:00退房直接搭車去機場,國際線3F寄放行李再逛逛機場。", location: "New Chitose Airport", image: "https://www.hokkaido-airports.com/ja/new-chitose/spend/event/assets/images/photocontest2025-result05.jpg" },
+        
+            ]
+        }
+    ];
+    // (註：為了範例完整性，我幫您補上了部分日期的圖片。您可以自行替換或新增其他日期的 image 連結)
+
+    // --- Logic Functions ---
+    function openMap(query) { window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank'); }
+      function searchFlight(flightNo) {
+        // Construct Google Search URL for Flight info
+        const url = `https://www.google.com/search?q=EVA+Air+${flightNo}+flight+status`;
+        window.open(url, '_blank');
+    }
+    function init() {
+        const tabsContainer = document.getElementById('dayTabs');
+        const contentContainer = document.getElementById('itineraryContent');
+        itineraryData.forEach((day, index) => {
+            const tab = document.createElement('li'); tab.className = `nav-item ${index === 0 ? 'active' : ''}`; tab.textContent = day.date; tab.onclick = () => switchTab(index); tabsContainer.appendChild(tab);
+            const contentDiv = document.createElement('div'); contentDiv.className = `day-content ${index === 0 ? 'active' : ''}`; contentDiv.id = `day-${index}`;
+            
+            let eventsHtml = '';
+            day.events.forEach(event => {
+                const mapBtn = event.location ? `<button class="btn btn-map" onclick="openMap('${event.location}')"><i class="fas fa-map-marker-alt"></i> 地圖</button>` : '';
+                const webBtn = event.url ? `<a href="${event.url}" target="_blank" class="btn btn-web"><i class="fas fa-globe"></i> 官網</a>` : '';
+                // 新增：圖片 HTML 結構
+                const imageHtml = event.image ? `<div class="timeline-image"><img src="${event.image}" alt="${event.title}"></div>` : '';
+                
+                // 修改：新的 Flex 佈局結構
+                eventsHtml += `
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <span class="time">${event.time || ''}</span>
+                            <div class="activity-title">${event.title}</div>
+                            <div class="activity-desc">${event.desc}</div>
+                            <div class="btn-group">${mapBtn}${webBtn}</div>
+                        </div>
+                        ${imageHtml} </div>
+                `;
+            });
+            contentDiv.innerHTML = `<h2 style="margin-top:0; color:var(--primary-color);">${day.date} ${day.title}</h2><div class="timeline">${eventsHtml}</div>`;
+            contentContainer.appendChild(contentDiv);
+        });
+    }
+    function switchTab(index) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); document.querySelectorAll('.nav-item')[index].classList.add('active');
+        document.querySelectorAll('.day-content').forEach(el => el.classList.remove('active')); document.getElementById(`day-${index}`).classList.add('active');
+        if(window.innerWidth < 600) { document.getElementById('itineraryContent').scrollIntoView({behavior: 'smooth', block: 'start'}); }
+    }
+    init();
+</script>
+</body>
+</html>
